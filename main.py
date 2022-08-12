@@ -22,4 +22,5 @@ def index():
 
 if __name__ == "__main__":
     # socketio.run(app, host = "localhost")
-    socketio.run(app)
+    #socketio.run(app)
+    app.run()
