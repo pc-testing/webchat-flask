@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- two external JS libraries need to be imported
+1. jquery: useful for animation and interaction with frontend
+2.socketio: to communicate frontend with backend 
+for this we will use content delivery network(cdn) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
+</head>
+
+<body>
+    <!-- javascript -->
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            // connecting to flask backend which is running on port 5000
+            // var socket = io.connect("localhost:5000")
+            var socket = io.connect()
+
+
+            // on 'connect' we will have a function being executed, which will send a message to backend
+            socket.on('connect',function(){
+                socket.send("User connected!");
+                // this is the same message we check to not broadcast to everyone else in backend
+
+            });
+            // another socket for @socket.io part in backend
+            socket.on('message',function(data){
+                // we are adding a data to this function which will be added to the div box
+                // using # when dealing with IDs
+                $('#messages').append($('<p>').text(data));
+
+            });
+
+            // adding functionality of button
+            $('#sendBtn').on('click',function(){
+                // we will send to the socket content of username and message
+               socket.send($('#username').val()+':' + $('#message').val());
+
+                //set this to empty when we send a message
+                $('#message').val('');
+            
+
+
+            });
+        })
+
+
+    </script>
+
+    <!-- frontend display -->
+    <div id="messages">
+    </div>
+    <input type="text" id="username" placeholder="username">
+    <input type="text" id="message" placeholder="message">
+    <button id="sendBtn">Send</button>
+
+</body>
+
+</html>
